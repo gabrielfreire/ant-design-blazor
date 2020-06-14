@@ -1,5 +1,5 @@
 ﻿<Menu Class="aside-container menu-site" Theme="MenuTheme.Light" Mode="MenuMode.Inline">
-    @menuItemTemplate((MenuItems, LanguageService, 1))
+    @menuItemTemplate((MenuItems, LanguageService, 1));
 </Menu>
 
 
@@ -28,16 +28,12 @@
                             {
                                 <span class="chinese">@menu.SubTitle</span>
                             }
-                            else if (context.level > 1 && context.languageService.CurrentCulture.Name == "zh-CN")
-                            {
-                                <span class="chinese">@(context.languageService.Resources[menu.Title])</span>
-                            }
                         </MenuLink>
                     </MenuItem>
                 }
                 else if (menu.Type == "subMenu")
                 {
-                    <SubMenu Title="@(context.languageService.Resources[menu.Title])" IsOpen="true">
+                    <SubMenu Title="menu.Title" IsOpen="true">
                         @if (menu.Children.Any())
                         {
                             @menuItemTemplate((menu.Children, context.languageService, context.level + 1))
@@ -46,7 +42,7 @@
                 }
                 else if (menu.Type == "itemGroup")
                 {
-                    <MenuItemGroup Title="@context.languageService.Resources[menu.Title]">
+                    <MenuItemGroup Title="menu.Title">
                         @if (menu.Children.Any())
                         {
                             @menuItemTemplate((menu.Children, context.languageService, context.level + 1))
@@ -56,21 +52,4 @@
             }
         </Template>;
 
-    protected override async Task OnInitializedAsync()
-    {
-        var baseUrl = NavigationManager.ToAbsoluteUri(NavigationManager.BaseUri);
-        MenuItems = await HttpClient.GetFromJsonAsync<DemoMenuItem[]>(new Uri(baseUrl, "_content/AntDesign.Docs/menu.json").ToString());
-
-        LanguageService.LanguageChanged += (_, args) =>
-        {
-            InvokeAsync(StateHasChanged);
-        };
-
-        NavigationManager.LocationChanged += (_, args) =>
-        {
-            StateHasChanged();
-        };
-        StateHasChanged();
-        await base.OnInitializedAsync();
-    }
 }

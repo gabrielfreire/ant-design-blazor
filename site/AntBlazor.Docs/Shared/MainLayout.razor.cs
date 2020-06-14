@@ -31,8 +31,8 @@ namespace AntDesign.Docs.Shared
 
         protected override async Task OnInitializedAsync()
         {
-            //await GetCurrentMenuItems();
-            //StateHasChanged();
+            await GetCurrentMenuItems();
+            StateHasChanged();
 
             await DemoService.InitializeDemos();
 
